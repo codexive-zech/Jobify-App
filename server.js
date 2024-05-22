@@ -5,6 +5,7 @@ import express from "express";
 import morgan from "morgan";
 import connectDB from "./db/connectDB.js";
 import jobRouter from "./routes/jobRoutes.js";
+import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 
 const app = express();
 
@@ -20,10 +21,7 @@ app.use("*", (req, res) => {
   res.status(404).json({ msg: "Route Not Found" });
 }); // Triggers when req made to a URL does not exist
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).json({ msg: "Something Went Wrong" });
-}); // Triggers and catches error occurring during request processing
+app.use(errorHandlerMiddleware); // Triggers and catches error occurring during asynchronous request processing
 
 const PORT = process.env.PORT || 5100; // stating PORT location
 

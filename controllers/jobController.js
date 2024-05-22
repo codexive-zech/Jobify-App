@@ -1,23 +1,25 @@
+import { NotFoundError } from "../errors/customError.js";
 import Job from "../models/Job.js";
+import { StatusCodes } from "http-status-codes";
 
 export const createJob = async (req, res) => {
   const { position, company } = req.body;
   const job = await Job.create({ position, company });
-  res.status(201).json({ job });
+  res.status(StatusCodes.CREATED).json({ job });
 };
 
 export const getJobs = async (req, res) => {
   const jobs = await Job.find({});
-  res.status(200).json({ jobs, count: jobs.length });
+  res.status(StatusCodes.OK).json({ jobs, count: jobs.length });
 };
 
 export const getSingleJob = async (req, res) => {
   const { id: jobId } = req.params;
   const job = await Job.findOne({ _id: jobId });
   if (!job) {
-    return res.status(400).json({ msg: `No Job With ID ${jobId}` });
+    throw new NotFoundError(`No Job With ID ${jobId}`);
   }
-  res.status(200).json({ job });
+  res.status(StatusCodes.OK).json({ job });
 };
 
 export const updateJob = async (req, res) => {
@@ -28,15 +30,15 @@ export const updateJob = async (req, res) => {
     runValidators: true,
   });
   if (!job) {
-    return res.status(400).json({ msg: `No Job With ID ${jobId}` });
+    throw new NotFoundError(`No Job With ID ${jobId}`);
   }
-  res.status(200).json({ job });
+  res.status(StatusCodes.OK).json({ job });
 };
 export const deleteJob = async (req, res) => {
   const { id: jobId } = req.params;
   const job = await Job.findOneAndDelete({ _id: jobId });
   if (!job) {
-    return res.status(400).json({ msg: `No Job With ID ${jobId}` });
+    throw new NotFoundError(`No Job With ID ${jobId}`);
   }
-  res.status(200).json({ msg: `Job Removed Successfully`, job });
+  res.status(StatusCodes.OK).json({ msg: `Job Removed Successfully`, job });
 };

@@ -6,7 +6,6 @@ import morgan from "morgan";
 import connectDB from "./db/connectDB.js";
 import jobRouter from "./routes/jobRoutes.js";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
-import { validateTest } from "./middlewares/validationMiddleware.js";
 
 const app = express();
 
@@ -15,11 +14,6 @@ if (process.env.NODE_ENV === "development") {
 } // checking for dev mode in other to add morgan
 
 app.use(express.json()); // parsing the data received from the browser
-
-app.post("/api/v1/test", validateTest, (req, res) => {
-  const { name } = req.body;
-  res.json(`Hello, ${name}!`);
-});
 
 app.use("/api/v1/jobs", jobRouter);
 

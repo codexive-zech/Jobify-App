@@ -3,8 +3,7 @@ import Job from "../models/Job.js";
 import { StatusCodes } from "http-status-codes";
 
 export const createJob = async (req, res) => {
-  const { position, company } = req.body;
-  const job = await Job.create({ position, company });
+  const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
 

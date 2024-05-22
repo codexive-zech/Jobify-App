@@ -1,5 +1,6 @@
 import { body, validationResult } from "express-validator";
 import { BadRequestError } from "../errors/customError.js";
+import { JobStatus, JobType } from "../utils/constant.js";
 
 const withValidationMiddleware = (validationRules) => {
   return [
@@ -18,10 +19,14 @@ const withValidationMiddleware = (validationRules) => {
   ];
 };
 
-export const validateTest = withValidationMiddleware([
-  body("name")
-    .notEmpty()
-    .withMessage("Please Provide Name")
-    .isLength({ min: 3, max: 50 })
-    .withMessage("Name Must be between 3 - 50 Character Long"),
+export const validateJobInput = withValidationMiddleware([
+  body("company").notEmpty().withMessage("Please Provide Company Name"),
+  body("position").notEmpty().withMessage("Please Provide Job Position"),
+  body("jobLocation").notEmpty().withMessage("Please Provide Job Location"),
+  body("jobStatus")
+    .isIn(Object.values(JobStatus))
+    .withMessage("Invalid Job Status Value"),
+  body("jobType")
+    .isIn(Object.values(JobType))
+    .withMessage("Invalid Job Type Value"),
 ]);

@@ -1,6 +1,7 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { BadRequestError } from "../errors/customError.js";
 import { JobStatus, JobType } from "../utils/constant.js";
+import mongoose from "mongoose";
 
 const withValidationMiddleware = (validationRules) => {
   return [
@@ -29,4 +30,10 @@ export const validateJobInput = withValidationMiddleware([
   body("jobType")
     .isIn(Object.values(JobType))
     .withMessage("Invalid Job Type Value"),
+]);
+
+export const validateIdParam = withValidationMiddleware([
+  param("id")
+    .custom((value) => mongoose.Types.ObjectId.isValid(value))
+    .withMessage("Invalid MongoDB ID"),
 ]);

@@ -1,7 +1,8 @@
 import { body, param, validationResult } from "express-validator";
-import { BadRequestError } from "../errors/customError.js";
+import { BadRequestError, NotFoundError } from "../errors/customError.js";
 import { JobStatus, JobType } from "../utils/constant.js";
 import mongoose from "mongoose";
+import Job from "../models/Job.js";
 
 const withValidationMiddleware = (validationRules) => {
   return [
@@ -13,6 +14,9 @@ const withValidationMiddleware = (validationRules) => {
           .array()
           .map((err) => err.msg)
           .join(", ");
+        if (errorMessage[0].startsWith("No Job")) {
+          throw new NotFoundError(errorMessage);
+        } // display this error if the Job id does not exist in the DB
         throw new BadRequestError(errorMessage);
       }
       next();
@@ -33,7 +37,14 @@ export const validateJobInput = withValidationMiddleware([
 ]);
 
 export const validateIdParam = withValidationMiddleware([
-  param("id")
-    .custom((value) => mongoose.Types.ObjectId.isValid(value))
-    .withMessage("Invalid MongoDB ID"),
+  param("id").custom(async (value) => {
+    const isValidIdLength = mongoose.Types.ObjectId.isValid(value); // checking for length of the ID
+    if (!isValidIdLength) {
+      throw new BadRequestError("Invalid MongoDB Id");
+    } // error to display if the length is big/less than the actual MongoDB Id
+    const job = await Job.findById(value);
+    if (!job) {
+      throw new NotFoundError(`No Job With ID ${value}`);
+    }
+  }),
 ]);

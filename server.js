@@ -6,6 +6,7 @@ import morgan from "morgan";
 import connectDB from "./db/connectDB.js";
 import jobRouter from "./routes/jobRoutes.js";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
+import authRouter from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -14,6 +15,8 @@ if (process.env.NODE_ENV === "development") {
 } // checking for dev mode in other to add morgan
 
 app.use(express.json()); // parsing the data received from the browser
+
+app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/jobs", jobRouter);
 

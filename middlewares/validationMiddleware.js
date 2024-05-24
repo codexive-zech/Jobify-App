@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError } from "../errors/customError.js";
 import { JobStatus, JobType } from "../utils/constant.js";
 import mongoose from "mongoose";
 import Job from "../models/Job.js";
+import User from "../models/User.js";
 
 const withValidationMiddleware = (validationRules) => {
   return [
@@ -47,4 +48,26 @@ export const validateIdParam = withValidationMiddleware([
       throw new NotFoundError(`No Job With ID ${value}`);
     }
   }),
+]);
+
+export const validateRegisterInput = withValidationMiddleware([
+  body("name").notEmpty().withMessage("Please Provide Name"),
+  body("email")
+    .notEmpty()
+    .withMessage("Please Provide Email")
+    .isEmail()
+    .withMessage("Invalid Email Address")
+    .custom(async (value) => {
+      const user = await User.findOne({ email: value });
+      if (user) {
+        throw new BadRequestError("Email Already Exist");
+      }
+    }),
+  body("password")
+    .notEmpty()
+    .withMessage("Please Provide Password")
+    .isLength({ min: 8 })
+    .withMessage("Password Must be  Character Long"),
+  body("lastName").notEmpty().withMessage("Please Provide Last Name"),
+  body("location").notEmpty().withMessage("Please Provide Location"),
 ]);

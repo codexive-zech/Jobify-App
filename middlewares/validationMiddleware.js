@@ -62,7 +62,7 @@ export const validateRegisterInput = withValidationMiddleware([
       if (user) {
         throw new BadRequestError("Email Already Exist");
       }
-    }),
+    }), // To distinguish Unique Email
   body("password")
     .notEmpty()
     .withMessage("Please Provide Password")
@@ -70,4 +70,13 @@ export const validateRegisterInput = withValidationMiddleware([
     .withMessage("Password Must be  Character Long"),
   body("lastName").notEmpty().withMessage("Please Provide Last Name"),
   body("location").notEmpty().withMessage("Please Provide Location"),
+]);
+
+export const validateLoginInput = withValidationMiddleware([
+  body("email")
+    .notEmpty()
+    .withMessage(" Please Provide Email")
+    .isEmail()
+    .withMessage("Invalid Email Address"),
+  body("password").notEmpty().withMessage("Please Provide Password"),
 ]);

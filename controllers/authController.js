@@ -1,6 +1,12 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
-import { passwordHashed } from "../utils/passwordUtils.js";
+import { comparePassword, passwordHashed } from "../utils/passwordUtils.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} from "../errors/customError.js";
+import { createJWT } from "../utils/tokenUtil.js";
 
 export const registerUser = async (req, res) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
@@ -14,5 +20,18 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  res.send("Login User");
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new BadRequestError("Please Provide Valid Credentials");
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new UnauthenticatedError("Invalid Credentials");
+  }
+  const isPasswordCorrect = await comparePassword(password, user.password);
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError("Please Provide a Valid Password");
+  }
+  const token = createJWT({ userId: user._id, role: user.role });
+  res.status(StatusCodes.OK).json({ token });
 };

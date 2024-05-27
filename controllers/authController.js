@@ -33,5 +33,11 @@ export const loginUser = async (req, res) => {
     throw new UnauthenticatedError("Please Provide a Valid Password");
   }
   const token = createJWT({ userId: user._id, role: user.role });
+  const oneDay = 1000 * 60 * 60 * 24;
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+    secure: process.env.NODE_ENV === "production",
+  });
   res.status(StatusCodes.OK).json({ token });
 };

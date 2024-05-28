@@ -1,5 +1,9 @@
 import { body, param, validationResult } from "express-validator";
-import { BadRequestError, NotFoundError } from "../errors/customError.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/customError.js";
 import { JobStatus, JobType } from "../utils/constant.js";
 import mongoose from "mongoose";
 import Job from "../models/Job.js";
@@ -18,6 +22,9 @@ const withValidationMiddleware = (validationRules) => {
         if (errorMessage[0].startsWith("No Job")) {
           throw new NotFoundError(errorMessage);
         } // display this error if the Job id does not exist in the DB
+        if (errorMessage[0].startsWith("Not Authorized")) {
+          throw new UnauthorizedError(errorMessage);
+        } // display this error if the job trying to be accessed isn't accessed by the original owner
         throw new BadRequestError(errorMessage);
       }
       next();
@@ -38,7 +45,7 @@ export const validateJobInput = withValidationMiddleware([
 ]);
 
 export const validateIdParam = withValidationMiddleware([
-  param("id").custom(async (value) => {
+  param("id").custom(async (value, { req }) => {
     const isValidIdLength = mongoose.Types.ObjectId.isValid(value); // checking for length of the ID
     if (!isValidIdLength) {
       throw new BadRequestError("Invalid MongoDB Id");
@@ -46,6 +53,13 @@ export const validateIdParam = withValidationMiddleware([
     const job = await Job.findById(value);
     if (!job) {
       throw new NotFoundError(`No Job With ID ${value}`);
+    }
+    // Checking To Know if the User Making the Request is the original owner
+    const isAdmin = req.user.role === "admin";
+    const isJobOwner = req.user.userId === job.createdBy.toString();
+
+    if (!isAdmin && !isJobOwner) {
+      throw new UnauthorizedError("Not Authorized To Access This Route");
     }
   }),
 ]);

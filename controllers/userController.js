@@ -8,8 +8,10 @@ export const getCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: getUserExcludePassword });
 };
 
-export const getAppStats = (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "Get Application Stats" });
+export const getAppStats = async (req, res) => {
+  const user = await User.countDocuments();
+  const job = await Job.countDocuments();
+  res.status(StatusCodes.OK).json({ user, job });
 };
 
 export const updateUser = async (req, res) => {

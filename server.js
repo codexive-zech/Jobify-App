@@ -10,6 +10,7 @@ import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
+import notFoundMiddleware from "./middlewares/notFoundMiddleware.js";
 
 const app = express();
 
@@ -30,11 +31,9 @@ app.get("/api/v1/test", (req, res) => {
   res.json({ msg: "test route" });
 });
 
-app.use("*", (req, res) => {
-  res.status(404).json({ msg: "Route Not Found" });
-}); // Triggers when req made to a URL does not exist
+app.use("*", notFoundMiddleware); // Triggers when req made to a URL does not exist
 
-app.use(errorHandlerMiddleware); // Triggers and catches error occurring during asynchronous request processing
+app.use(errorHandlerMiddleware); // Triggers and catches error occurring during asynchronous request processing (during data processing)
 
 const PORT = process.env.PORT || 5100; // stating PORT location
 
@@ -44,6 +43,5 @@ try {
     console.log("Server is up and DB is Connected");
   });
 } catch (error) {
-  console.log(error);
   process.exit(1);
 }

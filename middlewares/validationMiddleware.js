@@ -94,3 +94,20 @@ export const validateLoginInput = withValidationMiddleware([
     .withMessage("Invalid Email Address"),
   body("password").notEmpty().withMessage("Please Provide Password"),
 ]);
+
+export const validateUpdateUserInput = withValidationMiddleware([
+  body("name").notEmpty().withMessage("Please Provide Name"),
+  body("email")
+    .notEmpty()
+    .withMessage("Please Provide Email")
+    .isEmail()
+    .withMessage("Invalid Email Address")
+    .custom(async (value, { req }) => {
+      const user = await User.findOne({ email: value });
+      if (user && user._id.toString() !== req.user.userId) {
+        throw new BadRequestError("Email Already Exist");
+      }
+    }), // To distinguish Unique Email
+  body("lastName").notEmpty().withMessage("Please Provide Last Name"),
+  body("location").notEmpty().withMessage("Please Provide Location"),
+]);

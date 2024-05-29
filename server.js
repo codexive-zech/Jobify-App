@@ -7,6 +7,7 @@ import connectDB from "./db/connectDB.js";
 import jobRouter from "./routes/jobRoutes.js";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
 
@@ -22,6 +23,8 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
+
+app.use("/api/v1/users", authenticateUser, userRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "Route Not Found" });

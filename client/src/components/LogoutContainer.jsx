@@ -5,7 +5,7 @@ import { FaCaretDown, FaUser } from "react-icons/fa";
 
 const LogoutContainer = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { logoutUser, tempUser } = useDashboardContext();
+  const { logout, user } = useDashboardContext();
   const showDropdownOption = () => {
     setShowDropdown(!showDropdown);
   };
@@ -17,11 +17,11 @@ const LogoutContainer = () => {
         onClick={showDropdownOption}
       >
         <FaUser />
-        {tempUser?.name}
+        {user?.name}
         <FaCaretDown />
       </button>
       <div className={`dropdown ${showDropdown && "show-dropdown"}`}>
-        <button type="button" className="dropdown-btn" onClick={logoutUser}>
+        <button type="button" className="dropdown-btn" onClick={logout}>
           Logout
         </button>
       </div>

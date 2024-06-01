@@ -28,7 +28,7 @@ export const updateJob = async (req, res) => {
     runValidators: true,
   });
 
-  res.status(StatusCodes.OK).json({ job });
+  res.status(StatusCodes.OK).json({ job, msg: "Job Modified Successfully" });
 };
 export const deleteJob = async (req, res) => {
   const { id: jobId } = req.params;

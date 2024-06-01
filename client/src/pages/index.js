@@ -2,7 +2,7 @@ import AddJob from "./AddJob";
 import Admin from "./Admin";
 import DashboardLayout from "./DashboardLayout";
 import AllJobs from "./AllJobs";
-import DeleteJobs from "./DeleteJob";
+
 import EditJob from "./EditJob";
 import Error from "./Error";
 import HomeLayout from "./HomeLayout";
@@ -17,7 +17,6 @@ export {
   Admin,
   DashboardLayout,
   AllJobs,
-  DeleteJobs,
   EditJob,
   Error,
   HomeLayout,

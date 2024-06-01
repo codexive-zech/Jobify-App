@@ -27,13 +27,13 @@ const Login = () => {
         <FormRow
           type="email"
           name="email"
-          defaultValue="zechariahmartins@gmail.com"
+          placeholder="zechariahmartins@gmail.com"
           labelText="Email"
         />
         <FormRow
           type="password"
           name="password"
-          defaultValue="secret"
+          placeholder="Password"
           labelText="Password"
         />
         <button

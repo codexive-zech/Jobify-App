@@ -62,6 +62,12 @@ const Wrapper = styled.aside`
     .active {
       color: var(--primary-500);
     }
+
+    .pending {
+      background: var(--background-color);
+      width: 100%;
+      margin: 0 auto;
+    }
   }
 `;
 export default Wrapper;

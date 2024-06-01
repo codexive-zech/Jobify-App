@@ -25,17 +25,20 @@ const DashboardLayout = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
   const toggleDarkTheme = () => {
     const newDarkTheme = !isDarkTheme;
     setIsDarkTheme(newDarkTheme);
     document.body.classList.toggle("dark-theme", newDarkTheme);
     localStorage.setItem("darkTheme", newDarkTheme);
   };
+
   const logout = async () => {
     await customFetch.get("/auth/logout");
     navigate("/");
     toast.success("Logging Out");
   };
+
   return (
     <DashboardContext.Provider
       value={{

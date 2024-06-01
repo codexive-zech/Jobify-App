@@ -1,21 +1,23 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Wrapper = styled.section`
-  border-radius: var(--border-radius);
   width: 100%;
+  border-radius: var(--border-radius);
   background: var(--background-secondary-color);
   padding: 3rem 2rem 4rem;
+
   .form-title {
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
   }
+
   .form {
     margin: 0;
     border-radius: 0;
-    box-shadow: none;
-    padding: 0;
     max-width: 100%;
     width: 100%;
+    padding: 0;
   }
+
   .form-row {
     margin-bottom: 0;
   }
@@ -28,7 +30,9 @@ const Wrapper = styled.section`
     margin-top: 1rem;
     display: grid;
     place-items: center;
+    font-weight: 700;
   }
+
   @media (min-width: 992px) {
     .form-center {
       grid-template-columns: 1fr 1fr;
@@ -36,7 +40,7 @@ const Wrapper = styled.section`
       column-gap: 1rem;
     }
   }
-  @media (min-width: 1120px) {
+  @media (min-width: 1024px) {
     .form-center {
       grid-template-columns: 1fr 1fr 1fr;
     }

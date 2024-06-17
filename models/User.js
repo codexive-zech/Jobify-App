@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.methods.excludePassword = function () {
-  let userObj = this.toObject();
-  delete userObj.password;
+  let userObj = this.toObject(); // convert the entire user schema into an object
+  delete userObj.password; // deleting the password field from the user object
   return userObj;
 };
 

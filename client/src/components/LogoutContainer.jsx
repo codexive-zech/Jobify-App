@@ -16,7 +16,11 @@ const LogoutContainer = () => {
         className=" btn logout-btn"
         onClick={showDropdownOption}
       >
-        <FaUser />
+        {user.avatar ? (
+          <img className="img" src={user.avatar} alt="Avatar" />
+        ) : (
+          <FaUser />
+        )}
         {user?.name}
         <FaCaretDown />
       </button>

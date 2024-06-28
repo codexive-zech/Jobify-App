@@ -1,6 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
 import Job from "../models/Job.js";
+import cloudinary from "cloudinary";
+import { promises as fs } from "fs";
+import path from "path";
 
 export const getCurrentUser = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
@@ -15,9 +18,26 @@ export const getAppStats = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const userObj = { ...req.body }; // spread the data coming in into an object
-  delete userObj.password; // delete the password field from the object
-  const user = await User.findByIdAndUpdate(req.user.userId, userObj);
+  const newUser = { ...req.body }; // spread the data coming in into an object
+  delete newUser.password; // delete the password field from the object
+  if (req.file) {
+    const filePath = path.join(req.file.destination, req.file.originalname);
+    const response = await cloudinary.v2.uploader.upload(filePath, {
+      use_filename: true,
+      folder: "profile-image",
+    }); // upload image file in available from form-data in FE
+    await fs.unlink(filePath); // remove the uploaded file from the local server
+    newUser.avatar = response.secure_url;
+    newUser.avatarPublicId = response.public_id;
+  } // upload image file only if it exist in the form-data
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.userId, newUser);
+  // const prevUpdatedUser = updatedUser; // the updated image file uploaded is now regarded as old image file
+
+  if (req.file && updatedUser.avatarPublicId) {
+    await cloudinary.v2.uploader.destroy(updatedUser.avatarPublicId);
+  } // remove old image file from cloudinary base on the avatar-public-id when we upload another new image
+
   res.status(StatusCodes.OK).json({ msg: "Update User" });
 };
 

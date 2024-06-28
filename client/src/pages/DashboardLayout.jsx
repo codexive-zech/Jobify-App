@@ -14,7 +14,7 @@ export const loader = async () => {
   } catch (error) {
     return redirect("/");
   }
-};
+}; // handling Private Route Technique for all pages under this Component
 
 const DashboardLayout = () => {
   const { user } = useLoaderData();

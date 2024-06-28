@@ -19,7 +19,6 @@ const AllJobs = () => {
       <JobSearchContainer />
       <JobsContainer />
     </>
-    // </AllJobsContext.Provider>
   );
 };
 

@@ -11,8 +11,14 @@ import userRouter from "./routes/userRoutes.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware.js";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
 
 const app = express();
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.resolve(__dirname, "./public")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

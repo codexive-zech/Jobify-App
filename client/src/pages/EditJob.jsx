@@ -15,7 +15,9 @@ export const loader = async ({ params }) => {
   }
 };
 
-export const action = async ({ params, request }) => {
+export const action = async (
+  { params, request } // params to get the id to make request to and request to retrieve the formData()
+) => {
   const formData = await request.formData();
   const updatedData = Object.fromEntries(formData);
   try {

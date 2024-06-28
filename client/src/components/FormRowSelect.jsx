@@ -13,6 +13,7 @@ const FormRowSelect = ({ name, defaultValue, labelText, list }) => {
           defaultValue={defaultValue || ""}
           required
         >
+          {/* Converting the value of the list-data from Object to Array */}
           {Object.values(list).map((item) => {
             return (
               <option key={item} value={item}>

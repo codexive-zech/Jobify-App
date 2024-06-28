@@ -6,7 +6,7 @@ const JobsContainer = () => {
   if (data.count === 0) {
     return (
       <Wrapper>
-        <h2>No Job Available To Display...</h2>
+        <h2>No Jobs Available To Display...</h2>
       </Wrapper>
     );
   }

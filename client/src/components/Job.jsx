@@ -31,7 +31,7 @@ const Job = ({
           <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
           <JobInfo icon={<FaCalendarAlt />} text={jobAddedDate} />
           <JobInfo icon={<FaBriefcase />} text={jobType} />
-          <div className={` status ${jobStatus}`}>{jobStatus}</div>
+          <div className={`status ${jobStatus}`}>{jobStatus}</div>
         </div>
         <footer className="actions">
           <Link to={`../edit-job/${_id}`} className=" btn edit-btn">

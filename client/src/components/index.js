@@ -7,6 +7,8 @@ import FormRowSelect from "./FormRowSelect";
 import JobSearchContainer from "./JobSearchContainer";
 import JobsContainer from "./JobsContainer";
 import StatItem from "./StatItem";
+import SubmitBtn from "./SubmitBtn";
+
 export {
   Logo,
   FormRow,
@@ -17,4 +19,5 @@ export {
   JobsContainer,
   JobSearchContainer,
   StatItem,
+  SubmitBtn,
 };

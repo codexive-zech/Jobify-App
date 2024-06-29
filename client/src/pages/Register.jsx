@@ -60,7 +60,7 @@ const Register = () => {
           className=" btn btn-block "
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting" : "Submit"}
+          {isSubmitting ? "Submitting" : "Register"}
         </button>
         <p>
           Already a Member?

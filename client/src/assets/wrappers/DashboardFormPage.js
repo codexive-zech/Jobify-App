@@ -12,10 +12,8 @@ const Wrapper = styled.section`
 
   .form {
     margin: 0;
-    border-radius: 0;
     max-width: 100%;
     width: 100%;
-    padding: 0;
   }
 
   .form-row {

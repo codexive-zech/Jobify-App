@@ -8,7 +8,8 @@ import JobSearchContainer from "./JobSearchContainer";
 import JobsContainer from "./JobsContainer";
 import StatItem from "./StatItem";
 import SubmitBtn from "./SubmitBtn";
-
+import StatsContainer from "./StatsContainer";
+import ChartsContainer from "./ChartsContainer";
 export {
   Logo,
   FormRow,
@@ -20,4 +21,6 @@ export {
   JobSearchContainer,
   StatItem,
   SubmitBtn,
+  StatsContainer,
+  ChartsContainer,
 };

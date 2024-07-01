@@ -50,7 +50,6 @@ export const showJobStats = async (req, res) => {
     total[title] = count;
     return total;
   }, {});
-  console.log(jobCountStats);
 
   const defaultStat = {
     pending: jobCountStats.pending || 0,
@@ -58,7 +57,7 @@ export const showJobStats = async (req, res) => {
     decline: jobCountStats.decline || 0,
   };
   let monthlyJobApp = await Job.aggregate([
-    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } },
+    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } }, // match all jobs belonging to a single user if they created it.
     {
       $group: {
         _id: {
@@ -67,10 +66,11 @@ export const showJobStats = async (req, res) => {
         },
         count: { $sum: 1 },
       },
-    },
+    }, // grouping all jobs based on the month and year they were created and counting them all
     { $sort: { "_id.year": -1, "_id.month": -1 } },
     { $limit: 6 },
   ]);
+
   monthlyJobApp = monthlyJobApp
     .map((item) => {
       const {

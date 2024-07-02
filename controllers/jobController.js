@@ -56,15 +56,13 @@ export const getJobs = async (req, res) => {
 
   const totalJobs = await Job.countDocuments(queryObj);
   const numbOfPage = Math.ceil(totalJobs / limit);
-  res
-    .status(StatusCodes.OK)
-    .json({
-      jobs,
-      count: jobs.length,
-      totalJobs,
-      numbOfPage,
-      currentPage: page,
-    });
+  res.status(StatusCodes.OK).json({
+    jobs,
+    count: jobs.length,
+    totalJobs,
+    numbOfPage,
+    currentPage: page,
+  });
 };
 
 export const getSingleJob = async (req, res) => {

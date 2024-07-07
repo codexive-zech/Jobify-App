@@ -18,7 +18,7 @@ export const getJobs = async (req, res) => {
     sort,
     page: jobPage,
     limit: jobLimit,
-  } = req.query;
+  } = req.query; //retrieving data from the Query Params
 
   const queryObj = {
     createdBy: req.user.userId,
@@ -29,33 +29,33 @@ export const getJobs = async (req, res) => {
       { position: { $regex: search, $options: "i" } },
       { company: { $regex: search, $options: "i" } },
     ];
-  }
+  } // perform app search via the value of position and company in the DB add to the query object only if the search params is added to the search query
 
   if (jobStatus && jobStatus !== "all") {
     queryObj.jobStatus = jobStatus;
-  }
+  } // perform app job status filtering based on the value in query object on if the jobStatus key is available in the search params
 
   if (jobType && jobType !== "all") {
     queryObj.jobType = jobType;
-  }
+  } // perform app job status filtering based on the value in query object on if the jobStatus key is available in the search params
 
   const sortOptions = {
-    newest: "-createdAt",
-    oldest: "createdAt",
-    "a-z": "position",
-    "z-a": "-position",
+    newest: "-createdAt", // arrange createdAt field in descending order
+    oldest: "createdAt", // arrange createdAt field in ascending order
+    "a-z": "position", // arrange position field in ascending order
+    "z-a": "-position", // arrange position field in descending order
   };
 
-  const sortKey = sortOptions[sort] || sortOptions.newest;
+  const sortKey = sortOptions[sort] || sortOptions.newest; // set a new sort key value based on the options
 
   const page = Number(jobPage) || 1; // page
   const limit = Number(jobLimit) || 10; // limit
   const skip = (page - 1) * limit; // how many jobs is needed to be skipped when moving to another page
 
-  const jobs = await Job.find(queryObj).sort(sortKey).limit(limit).skip(skip);
+  const jobs = await Job.find(queryObj).sort(sortKey).limit(limit).skip(skip); // finding the list of jobs available in the Job collection
 
-  const totalJobs = await Job.countDocuments(queryObj);
-  const numbOfPage = Math.ceil(totalJobs / limit);
+  const totalJobs = await Job.countDocuments(queryObj); // counting the total number of document (job) available in collection
+  const numbOfPage = Math.ceil(totalJobs / limit); // breaking down the number of pages need to display the jobs
   res.status(StatusCodes.OK).json({
     jobs,
     count: jobs.length,
@@ -91,9 +91,18 @@ export const deleteJob = async (req, res) => {
 
 export const showJobStats = async (req, res) => {
   let jobCountStats = await Job.aggregate([
-    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } }, // match all jobs belonging to a single user if they created it.
-    { $group: { _id: "$jobStatus", count: { $sum: 1 } } }, // grouping all jobs to their various job status and counting job each based on their status
-  ]);
+    {
+      $match: {
+        createdBy: new mongoose.Types.ObjectId(req.user.userId), // converts req.user.userId into an ObjectId which is mongoose Ids format
+      },
+    }, // filtering the jobs so that only the ones created by the user specified in req.user.userId are passed to the next stage.
+    {
+      $group: {
+        _id: "$jobStatus",
+        count: { $sum: 1 }, // calculates the count of job status by adding 1 for each job
+      },
+    }, // grouping all jobs to their respective status and counting job each based on their status
+  ]); // performing an aggregation operation on the Job collection available in MongoDB
 
   jobCountStats = jobCountStats.reduce((total, curr) => {
     const { _id: title, count } = curr;
@@ -106,19 +115,20 @@ export const showJobStats = async (req, res) => {
     interview: jobCountStats.interview || 0,
     decline: jobCountStats.decline || 0,
   };
+
   let monthlyJobApp = await Job.aggregate([
-    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } }, // match all jobs belonging to a single user if they created it.
+    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } }, // filtering the jobs to only those created by the user identified by req.user.userId.
     {
       $group: {
         _id: {
           year: { $year: "$createdAt" },
           month: { $month: "$createdAt" },
         },
-        count: { $sum: 1 },
+        count: { $sum: 1 }, // calculates the count of job based on the year and month by adding 1 for each.
       },
-    }, // grouping all jobs based on the month and year they were created and counting them all
-    { $sort: { "_id.year": -1, "_id.month": -1 } },
-    { $limit: 6 },
+    }, // grouping all the jobs available based on the year and month when they were created
+    { $sort: { "_id.year": -1, "_id.month": -1 } }, // sorting the grouped year and month in descending order, it will starts from the most recent year and month.
+    { $limit: 6 }, // limiting the output to the top 6 groups, after sorting. This is effectively getting the job count for the last 6 months
   ]);
 
   monthlyJobApp = monthlyJobApp

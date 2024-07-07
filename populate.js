@@ -6,8 +6,8 @@ import { readFile } from "fs/promises";
 import mongoose from "mongoose";
 
 try {
-  await mongoose.connect(process.env.MONGO_URL);
-  const user = await User.findOne({ email: "zech@gmail.com" });
+  await mongoose.connect(process.env.MONGO_URL); // connect to the DB
+  const user = await User.findOne({ email: "zech@gmail.com" }); // fetch the user with this specific email
   const jsonJob = JSON.parse(
     await readFile(new URL("./utils/mockData.json", import.meta.url))
   );

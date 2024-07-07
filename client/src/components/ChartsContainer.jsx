@@ -1,6 +1,4 @@
 import { useState } from "react";
-
-import AreaChart from "./AreaChartComponent";
 import Wrapper from "../assets/wrappers/ChartsContainer";
 import { useLoaderData } from "react-router-dom";
 import BarChartComponent from "./BarChartComponent";
@@ -20,6 +18,7 @@ const ChartsContainer = () => {
       ) : (
         <AreaChartComponent data={data.monthlyJobApp} />
       )}
+      {/* show the Bar Chart component only when bar chart state is true else show the Area Chart component  */}
     </Wrapper>
   );
 };

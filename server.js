@@ -20,12 +20,12 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+}); // configuration setting for cloudinary to enable Media Upload
 
 const app = express();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.resolve(__dirname, "./public")));
+app.use(express.static(path.resolve(__dirname, "./public"))); // render all file in the public folder statically
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

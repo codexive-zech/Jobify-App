@@ -13,8 +13,10 @@ const router = express.Router();
 router.route("/").get(getAllUsers);
 router.route("/current-user").get(getCurrentUser);
 router.route("/admin/stats").get(authorizedPermission("admin"), getAppStats);
-router
-  .route("/update-user")
-  .patch(upload.single("avatar"), validateUpdateUserInput, updateUser);
+router.route("/update-user").patch(
+  upload.single("avatar"), // The .single() method used on the upload instance from multer is used to indicate that only 1 file will be uploaded and the avatar field specifies the field for DB
+  validateUpdateUserInput,
+  updateUser
+);
 
 export default router;

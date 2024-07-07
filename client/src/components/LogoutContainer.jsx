@@ -21,6 +21,7 @@ const LogoutContainer = () => {
         ) : (
           <FaUser />
         )}
+        {/* Display profile image from the user obj or if it does not exist display a default Icon */}
         {user?.name}
         <FaCaretDown />
       </button>

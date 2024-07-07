@@ -10,7 +10,7 @@ export const action = async ({ request }) => {
   if (imageFile && imageFile.size > 500000) {
     toast.error("Image Size is Too Large");
     return null;
-  }
+  } // checking if the avatar field via image-file exist and the size is bigger than 5MB
   try {
     await customFetch.patch("/users/update-user", formData);
     toast.success("Profile Updated Successfully");

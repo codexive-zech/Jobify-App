@@ -21,18 +21,17 @@ export const updateUser = async (req, res) => {
   const newUser = { ...req.body }; // spread the data coming in into an object
   delete newUser.password; // delete the password field from the object
   if (req.file) {
-    const filePath = path.join(req.file.destination, req.file.originalname);
+    const filePath = path.join(req.file.destination, req.file.originalname); // join the directory and file name to get a single File Path for images
     const response = await cloudinary.v2.uploader.upload(filePath, {
       use_filename: true,
       folder: "profile-image",
-    }); // upload image file in available from form-data in FE
-    await fs.unlink(filePath); // remove the uploaded file from the local server
+    }); // upload image file available from form-data in FE
+    await fs.unlink(filePath); // remove the uploaded file from the local file storage server
     newUser.avatar = response.secure_url;
     newUser.avatarPublicId = response.public_id;
   } // upload image file only if it exist in the form-data
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.userId, newUser);
-  // const prevUpdatedUser = updatedUser; // the updated image file uploaded is now regarded as old image file
+  const updatedUser = await User.findByIdAndUpdate(req.user.userId, newUser); // update the User data with the added fields
 
   if (req.file && updatedUser.avatarPublicId) {
     await cloudinary.v2.uploader.destroy(updatedUser.avatarPublicId);

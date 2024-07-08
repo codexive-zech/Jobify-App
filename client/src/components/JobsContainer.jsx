@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import Wrapper from "../assets/wrappers/JobsContainer";
 import Job from "./Job";
 const JobsContainer = () => {
-  const data = useLoaderData();
+  const { data } = useLoaderData();
   if (data.count === 0) {
     return (
       <Wrapper>

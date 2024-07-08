@@ -6,7 +6,7 @@ const Wrapper = styled.section`
     text-transform: none;
     text-align: center;
   }
-  & > h5 {
+  & > h4 {
     font-weight: 700;
     margin-bottom: 1.5rem;
   }

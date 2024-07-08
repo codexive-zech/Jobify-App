@@ -1,9 +1,12 @@
 import { useLoaderData } from "react-router-dom";
 import Wrapper from "../assets/wrappers/JobsContainer";
 import Job from "./Job";
+import PageBtnContainer from "./PageBtnContainer";
 const JobsContainer = () => {
   const { data } = useLoaderData();
-  if (data.count === 0) {
+  const { count, totalJobs, jobs } = data;
+
+  if (count === 0) {
     return (
       <Wrapper>
         <h2>No Jobs Available To Display...</h2>
@@ -12,11 +15,15 @@ const JobsContainer = () => {
   }
   return (
     <Wrapper>
+      <h4>
+        {totalJobs} Job{totalJobs > 1 && "s"} Found
+      </h4>
       <div className="jobs">
-        {data?.jobs.map((job) => {
+        {jobs.map((job) => {
           return <Job key={job._id} {...job} />;
         })}
       </div>
+      {totalJobs > 1 && <PageBtnContainer />}
     </Wrapper>
   );
 };

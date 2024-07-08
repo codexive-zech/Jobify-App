@@ -9,7 +9,7 @@ const SubmitBtn = ({ formData }) => {
       className={`btn btn-block ${formData ? "form-btn" : null} `}
       disabled={isSubmitting}
     >
-      {isSubmitting ? "Submitting" : "Add Job"}
+      {isSubmitting ? "Submitting" : `Submit`}
     </button>
   );
 };

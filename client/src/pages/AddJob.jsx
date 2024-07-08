@@ -37,7 +37,7 @@ const AddJob = () => {
             name="jobStatus"
             labelText="Job Status"
             defaultValue={JobStatus.PENDING}
-            list={JobStatus}
+            list={Object.values(JobStatus)}
             required
           />
 
@@ -45,7 +45,7 @@ const AddJob = () => {
             name="jobType"
             labelText="Job Type"
             defaultValue={JobType.FULL_TIME}
-            list={JobType}
+            list={Object.values(JobType)}
             required
           />
           <SubmitBtn formData />

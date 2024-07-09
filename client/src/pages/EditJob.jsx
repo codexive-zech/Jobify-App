@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { Form, redirect, useLoaderData } from "react-router-dom";
 import { FormRow, FormRowSelect, SubmitBtn } from "../components";
 import { toast } from "react-toastify";
@@ -61,7 +63,7 @@ const EditJob = () => {
             name="jobStatus"
             labelText="Job Status"
             defaultValue={data?.job?.JobStatus}
-            list={JobStatus}
+            list={Object.values(JobStatus)}
             required
           />
 
@@ -69,7 +71,7 @@ const EditJob = () => {
             name="jobType"
             labelText="Job Type"
             defaultValue={data?.job?.JobType}
-            list={JobType}
+            list={Object.values(JobType)}
             required
           />
           <SubmitBtn formData />

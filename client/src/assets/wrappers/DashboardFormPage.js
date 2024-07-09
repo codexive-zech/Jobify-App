@@ -31,6 +31,11 @@ const Wrapper = styled.section`
     font-weight: 700;
   }
 
+  .text-size {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
   @media (min-width: 992px) {
     .form-center {
       grid-template-columns: 1fr 1fr;

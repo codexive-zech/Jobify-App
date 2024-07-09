@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Form, useOutletContext, redirect } from "react-router-dom";
 import Wrapper from "../assets/wrappers/DashboardFormPage";
 import { FormRow, FormRowSelect, SubmitBtn } from "../components";

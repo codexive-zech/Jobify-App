@@ -59,7 +59,10 @@ const JobSearchContainer = () => {
               submit(form);
             })}
           />
-          <Link to={`/dashboard/all-jobs`} className=" btn form-btn delete-btn">
+          <Link
+            to={`/dashboard/all-jobs`}
+            className=" btn form-btn delete-btn text-size"
+          >
             Reset Search Value
           </Link>
         </div>

@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { Form, Link, redirect, useNavigation } from "react-router-dom";
 import { FormRow, Logo } from "../components";
 import Wrapper from "../assets/wrappers/RegisterAndLoginPage";

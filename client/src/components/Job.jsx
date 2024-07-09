@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import day from "dayjs";
 import advanceFormat from "dayjs/plugin/advancedFormat";
 day.extend(advanceFormat);
@@ -34,7 +35,7 @@ const Job = ({
           <div className={`status ${jobStatus}`}>{jobStatus}</div>
         </div>
         <footer className="actions">
-          <Link to={`../edit-job/${_id}`} className=" btn edit-btn">
+          <Link to={`/dashboard/edit-job/${_id}`} className=" btn edit-btn">
             Edit
           </Link>
           <Form method="POST" action={`/dashboard/delete-job/${_id}`}>

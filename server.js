@@ -43,6 +43,9 @@ app.use("/api/v1/users", authenticateUser, userRouter);
 app.get("/api/v1/test", (req, res) => {
   res.json({ msg: "test route" });
 });
+app.use("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+});
 
 app.use("*", notFoundMiddleware); // Triggers when req made to a URL does not exist
 

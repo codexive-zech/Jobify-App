@@ -28,13 +28,13 @@ const Register = () => {
         <FormRow
           type="text"
           name="name"
-          placeholder="Zechariah"
+          placeholder="First Name"
           labelText="Name"
         />
         <FormRow
           type="text"
           name="lastName"
-          placeholder="Martins"
+          placeholder="Last Name"
           labelText="Last Name"
         />
         <FormRow
@@ -46,7 +46,7 @@ const Register = () => {
         <FormRow
           type="email"
           name="email"
-          placeholder="zechariahmartins@gmail.com"
+          placeholder="youremail@gmail.com"
           labelText="Email"
         />
         <FormRow

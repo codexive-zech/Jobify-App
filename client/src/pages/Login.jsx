@@ -49,7 +49,7 @@ const Login = () => {
         <FormRow
           type="email"
           name="email"
-          placeholder="zechariahmartins@gmail.com"
+          placeholder="youremail@gmail.com"
           labelText="Email"
         />
         <FormRow

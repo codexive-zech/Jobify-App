@@ -25,7 +25,7 @@ cloudinary.config({
 const app = express();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.resolve(__dirname, "./public"))); // render all file in the public folder statically
+app.use(express.static(path.resolve(__dirname, "./client/dist"))); // render all file in the client dist folder statically
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -44,7 +44,7 @@ app.get("/api/v1/test", (req, res) => {
   res.json({ msg: "test route" });
 });
 app.use("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+  res.sendFile(path.resolve(__dirname, "./client/dist", "index.html"));
 });
 
 app.use("*", notFoundMiddleware); // Triggers when req made to a URL does not exist

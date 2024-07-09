@@ -13,8 +13,8 @@ const SecondPageBtnContainer = () => {
   // });
 
   const handlePageChange = (pageNumb) => {
-    const searchParams = new URLSearchParams(search);
-    searchParams.set("page", pageNumb);
+    const searchParams = new URLSearchParams(search); // retrieve the search query string by creating a new URLSearchParams object with it
+    searchParams.set("page", pageNumb); // attach page property to the search params constructed URL
     navigate(`${pathname}?${searchParams.toString()}`);
   };
 
@@ -28,7 +28,7 @@ const SecondPageBtnContainer = () => {
         {pageNumb}
       </button>
     );
-  };
+  }; // page button to display
 
   const renderPageButtons = () => {
     let pageButtons = [];

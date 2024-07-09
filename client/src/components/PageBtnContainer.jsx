@@ -4,7 +4,7 @@ import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 
 const PageBtnContainer = () => {
   const { data } = useLoaderData();
-  const { numbOfPage, currentPage, totalJobs, count } = data;
+  const { numbOfPage, currentPage } = data;
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
 
@@ -13,8 +13,8 @@ const PageBtnContainer = () => {
   });
 
   const handlePageChange = (pageNumb) => {
-    const searchParams = new URLSearchParams(search);
-    searchParams.set("page", pageNumb);
+    const searchParams = new URLSearchParams(search); // retrieve the search query string by creating a new URLSearchParams object with it
+    searchParams.set("page", pageNumb); // attach page property to the search params constructed URL
     navigate(`${pathname}?${searchParams.toString()}`);
   };
 

@@ -10,6 +10,7 @@ import StatItem from "./StatItem";
 import SubmitBtn from "./SubmitBtn";
 import StatsContainer from "./StatsContainer";
 import ChartsContainer from "./ChartsContainer";
+import Loading from "./Loading";
 export {
   Logo,
   FormRow,
@@ -23,4 +24,5 @@ export {
   SubmitBtn,
   StatsContainer,
   ChartsContainer,
+  Loading,
 };

@@ -26,14 +26,24 @@ import { action as testingAction } from "./pages/Testing";
 import { loader as adminLoader } from "./pages/Admin";
 import { action as profileAction } from "./pages/Profile";
 import { loader as statsLoader } from "./pages/Stats";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Testing from "./pages/Testing";
+import ErrorElement from "./components/ErrorElement";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") === "true";
   document.body.classList.toggle("dark-theme", isDarkTheme);
   return isDarkTheme;
 };
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -70,7 +80,12 @@ const router = createBrowserRouter([
             element: <AddJob />,
             action: addJobAction,
           },
-          { path: "stats", element: <Stats />, loader: statsLoader },
+          {
+            path: "stats",
+            element: <Stats />,
+            loader: statsLoader,
+            errorElement: <ErrorElement />,
+          },
           { path: "profile", element: <Profile />, action: profileAction },
           { path: "admin", element: <Admin />, loader: adminLoader },
           { path: "all-jobs", element: <AllJobs />, loader: allJobsLoader },
@@ -87,7 +102,12 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />;
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;

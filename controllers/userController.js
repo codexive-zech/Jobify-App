@@ -2,8 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
 import Job from "../models/Job.js";
 import cloudinary from "cloudinary";
-import { promises as fs } from "fs";
 import path from "path";
+import { formatImage } from "../middlewares/multerMiddleware.js";
 
 export const getCurrentUser = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
@@ -21,12 +21,11 @@ export const updateUser = async (req, res) => {
   const newUser = { ...req.body }; // spread the data coming in into an object
   delete newUser.password; // delete the password field from the object
   if (req.file) {
-    const filePath = path.join(req.file.destination, req.file.originalname); // join the directory and file name to get a single File Path for images
-    const response = await cloudinary.v2.uploader.upload(filePath, {
+    const file = formatImage(req.file);
+    const response = await cloudinary.v2.uploader.upload(file, {
       use_filename: true,
       folder: "profile-image",
     }); // upload image file available from form-data in FE
-    await fs.unlink(filePath); // remove the uploaded file from the local file storage server
     newUser.avatar = response.secure_url;
     newUser.avatarPublicId = response.public_id;
   } // upload image file only if it exist in the form-data

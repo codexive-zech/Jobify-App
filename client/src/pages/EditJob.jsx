@@ -17,20 +17,23 @@ export const loader = async ({ params }) => {
   }
 };
 
-export const action = async (
-  { params, request } // params to get the id to make request to and request to retrieve the formData()
-) => {
-  const formData = await request.formData();
-  const updatedData = Object.fromEntries(formData);
-  try {
-    await customFetch.patch(`/jobs/${params.id}`, updatedData);
-    toast.success("Job Edited Successfully");
-    return redirect("/dashboard/all-jobs");
-  } catch (error) {
-    toast.error(error?.response?.data?.message);
-    return error;
-  }
-};
+export const action =
+  (queryClient) =>
+  async (
+    { params, request } // params to get the id to make request to and request to retrieve the formData()
+  ) => {
+    const formData = await request.formData();
+    const updatedData = Object.fromEntries(formData);
+    try {
+      await customFetch.patch(`/jobs/${params.id}`, updatedData);
+      await queryClient.invalidateQuery(["jobs"]);
+      toast.success("Job Edited Successfully");
+      return redirect("/dashboard/all-jobs");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return error;
+    }
+  };
 
 const EditJob = () => {
   const data = useLoaderData();

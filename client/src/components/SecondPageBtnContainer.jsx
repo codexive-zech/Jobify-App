@@ -1,9 +1,8 @@
-import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Wrapper from "../assets/wrappers/PageBtnContainer";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 
-const SecondPageBtnContainer = () => {
-  const { data } = useLoaderData();
+const SecondPageBtnContainer = ({ data }) => {
   const { numbOfPage, currentPage } = data;
   const { pathname, search } = useLocation();
   const navigate = useNavigate();

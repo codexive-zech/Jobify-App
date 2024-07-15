@@ -1,10 +1,8 @@
-import { useLoaderData } from "react-router-dom";
 import Wrapper from "../assets/wrappers/JobsContainer";
 import Job from "./Job";
 // import PageBtnContainer from "./PageBtnContainer";
 import SecondPageBtnContainer from "./SecondPageBtnContainer";
-const JobsContainer = () => {
-  const { data } = useLoaderData();
+const JobsContainer = ({ data }) => {
   const { count, totalJobs, jobs } = data;
 
   if (count === 0) {
@@ -24,7 +22,7 @@ const JobsContainer = () => {
           return <Job key={job._id} {...job} />;
         })}
       </div>
-      {totalJobs > 1 && <SecondPageBtnContainer />}
+      {totalJobs > 1 && <SecondPageBtnContainer data={data} />}
     </Wrapper>
   );
 };

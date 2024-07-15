@@ -5,7 +5,6 @@ import { JobSortBy, JobStatus, JobType } from "../../../utils/constant";
 const JobSearchContainer = () => {
   const submit = useSubmit();
   const { searchValues } = useLoaderData();
-  console.log(searchValues);
   const { search, jobStatus, jobType, sort } = searchValues;
 
   const debounce = (onChange) => {

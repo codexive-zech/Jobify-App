@@ -6,16 +6,29 @@ import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 import { JobStatus, JobType } from "../../../utils/constant";
 import Wrapper from "../assets/wrappers/DashboardFormPage";
+import { useQuery } from "@tanstack/react-query";
 
-export const loader = async ({ params }) => {
-  try {
-    const { data } = await customFetch.get(`/jobs/${params.id}`);
-    return data;
-  } catch (error) {
-    toast.error(error?.response?.data?.message);
-    return redirect("/dashboard/all-jobs");
-  }
+const editJobQuery = (id) => {
+  return {
+    queryKey: ["editJob", id],
+    queryFn: async () => {
+      const { data } = await customFetch.get(`/jobs/${id}`);
+      return data;
+    },
+  };
 };
+
+export const loader =
+  (queryClient) =>
+  async ({ params }) => {
+    try {
+      await queryClient.ensureQueryData(editJobQuery(params.id));
+      return params.id;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return redirect("/dashboard/all-jobs");
+    }
+  };
 
 export const action =
   (queryClient) =>
@@ -36,9 +49,9 @@ export const action =
   };
 
 const EditJob = () => {
-  const data = useLoaderData();
+  const id = useLoaderData();
+  const { data } = useQuery(editJobQuery(id));
 
-  console.log(data?.job);
   return (
     <Wrapper>
       <Form method="POST" className="form">

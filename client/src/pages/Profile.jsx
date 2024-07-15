@@ -1,24 +1,28 @@
-import { Form, useOutletContext } from "react-router-dom";
+import { Form, redirect, useOutletContext } from "react-router-dom";
 import { FormRow, SubmitBtn } from "../components";
 import Wrapper from "../assets/wrappers/DashboardFormPage";
 import customFetch from "../utils/customFetch";
 import { toast } from "react-toastify";
 
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const imageFile = formData.get("avatar"); // getting the file based on the avatar property from the form.
-  if (imageFile && imageFile.size > 500000) {
-    toast.error("Image Size is Too Large");
+export const action =
+  (queryClient) =>
+  async ({ request }) => {
+    const formData = await request.formData();
+    const imageFile = formData.get("avatar"); // getting the file based on the avatar property from the form.
+    if (imageFile && imageFile.size > 500000) {
+      toast.error("Image Size is Too Large");
+      return null;
+    } // checking if the avatar field via image-file exist and the size is bigger than 5MB
+    try {
+      await customFetch.patch("/users/update-user", formData);
+      queryClient.invalidateQueries(["user"]);
+      toast.success("Profile Updated Successfully");
+      return redirect("/dashboard");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
     return null;
-  } // checking if the avatar field via image-file exist and the size is bigger than 5MB
-  try {
-    await customFetch.patch("/users/update-user", formData);
-    toast.success("Profile Updated Successfully");
-  } catch (error) {
-    toast.error(error?.response?.data?.message);
-  }
-  return null;
-};
+  };
 
 const Profile = () => {
   const { user } = useOutletContext();

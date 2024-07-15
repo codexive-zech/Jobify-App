@@ -1,7 +1,7 @@
 import { Outlet, redirect, useNavigate, useNavigation } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Dashboard";
 import { SmallSidebar, BigSidebar, Navbar, Loading } from "../components";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 const DashboardContext = createContext();
 import { checkDefaultTheme } from "../App";
 import customFetch from "../utils/customFetch";
@@ -32,6 +32,7 @@ const DashboardLayout = ({ queryClient }) => {
   const isPageLoading = navigation.state === "loading";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(checkDefaultTheme());
+  const [isAuthError, setIsAuthError] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -50,6 +51,23 @@ const DashboardLayout = ({ queryClient }) => {
     navigate("/");
     toast.success("Logging Out");
   };
+
+  customFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error?.response?.status === 401) {
+        setIsAuthError(true);
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  useEffect(() => {
+    if (!isAuthError) return;
+    logout();
+  }, [isAuthError]);
 
   return (
     <DashboardContext.Provider

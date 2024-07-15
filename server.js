@@ -15,6 +15,8 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
 import cloudinary from "cloudinary";
+import helmet from "helmet";
+import mongooseSanitize from "express-mongo-sanitize";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -33,6 +35,8 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json()); // parsing the data received from the browser
 app.use(cookieParser());
+app.use(helmet());
+app.use(mongooseSanitize());
 
 app.use("/api/v1/auth", authRouter);
 
@@ -40,9 +44,6 @@ app.use("/api/v1/jobs", authenticateUser, jobRouter);
 
 app.use("/api/v1/users", authenticateUser, userRouter);
 
-app.get("/api/v1/test", (req, res) => {
-  res.json({ msg: "test route" });
-});
 app.use("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/dist", "index.html"));
 });

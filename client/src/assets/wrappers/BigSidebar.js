@@ -43,11 +43,11 @@ const Wrapper = styled.aside`
       color: var(--text-secondary-color);
       padding: 1rem 0;
       text-transform: capitalize;
-      transition: padding 0.3s ease-in-out;
+      transition: padding-left 0.3s ease-in-out;
     }
 
     .nav-link:hover {
-      padding-left: 2rem;
+      padding-left: 3rem;
       color: var(--primary-500);
       transition: var(--transition);
     }

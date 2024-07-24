@@ -1,18 +1,18 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {
-  DashboardLayout,
-  Error,
-  HomeLayout,
-  Landing,
-  Login,
-  Register,
-  AddJob,
-  AllJobs,
-  Admin,
-  Stats,
-  Profile,
-  EditJob,
-} from "./pages";
+import { Suspense, lazy } from "react";
+const DashboardLayout = lazy(() => import("./pages/DashboardLayout"));
+const Error = lazy(() => import("./pages/Error"));
+const HomeLayout = lazy(() => import("./pages/HomeLayout"));
+const Landing = lazy(() => import("./pages/Landing"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const AddJob = lazy(() => import("./pages/AddJob"));
+const AllJobs = lazy(() => import("./pages/AllJobs"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Stats = lazy(() => import("./pages/Stats"));
+const Profile = lazy(() => import("./pages/Profile"));
+const EditJob = lazy(() => import("./pages/EditJob"));
+const Testing = lazy(() => import("./pages/Testing"));
 
 import { action as registerAction } from "./pages/Register";
 import { action as loginAction } from "./pages/Login";
@@ -28,8 +28,8 @@ import { action as profileAction } from "./pages/Profile";
 import { loader as statsLoader } from "./pages/Stats";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Testing from "./pages/Testing";
 import ErrorElement from "./components/ErrorElement";
+import { Loading } from "./components";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") === "true";
@@ -48,21 +48,41 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomeLayout />,
-    errorElement: <Error />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <HomeLayout />,
+      </Suspense>
+    ),
+    errorElement: (
+      <Suspense fallback={<Loading />}>
+        <Error />,
+      </Suspense>
+    ),
     children: [
       {
         index: true,
-        element: <Landing />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Landing />,
+          </Suspense>
+        ),
       },
       {
         path: "register",
-        element: <Register />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Register />
+          </Suspense>
+        ),
         action: registerAction,
       },
       {
         path: "login",
-        element: <Login />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Login />
+          </Suspense>
+        ),
         action: loginAction(queryClient),
       },
       {
@@ -72,35 +92,75 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <DashboardLayout queryClient={queryClient} />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <DashboardLayout queryClient={queryClient} />
+          </Suspense>
+        ),
         loader: dashboardLoader(queryClient),
         children: [
           {
             index: true,
-            element: <AddJob />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AddJob />
+              </Suspense>
+            ),
             action: addJobAction(queryClient),
           },
           {
             path: "stats",
-            element: <Stats />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Stats />
+              </Suspense>
+            ),
             loader: statsLoader(queryClient),
-            errorElement: <ErrorElement />,
+            errorElement: (
+              <Suspense fallback={<Loading />}>
+                <ErrorElement />
+              </Suspense>
+            ),
           },
           {
             path: "profile",
-            element: <Profile />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Profile />
+              </Suspense>
+            ),
             action: profileAction(queryClient),
           },
-          { path: "admin", element: <Admin />, loader: adminLoader },
+          {
+            path: "admin",
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Admin />
+              </Suspense>
+            ),
+            loader: adminLoader,
+          },
           {
             path: "all-jobs",
-            element: <AllJobs />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AllJobs />
+              </Suspense>
+            ),
             loader: allJobsLoader(queryClient),
-            errorElement: <ErrorElement />,
+            errorElement: (
+              <Suspense fallback={<Loading />}>
+                <ErrorElement />
+              </Suspense>
+            ),
           },
           {
             path: "edit-job/:id",
-            element: <EditJob />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <EditJob />
+              </Suspense>
+            ),
             loader: editJobLoader(queryClient),
             action: editJobAction(queryClient),
           },

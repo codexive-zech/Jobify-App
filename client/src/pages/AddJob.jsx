@@ -13,7 +13,7 @@ export const action =
     const addJobData = Object.fromEntries(formData);
     try {
       await customFetch.post("/jobs", addJobData);
-      queryClient.invalidateQueries(["jobs"]);
+      queryClient.invalidateQueries(["jobs"]); // clear the cached [jobs] data/queries that are available
       toast.success("Job Added Successfully");
       return redirect("/dashboard/all-jobs");
     } catch (error) {

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { NavLink } from "react-router-dom";
 import links from "../utils/links";
 import { useDashboardContext } from "../pages/DashboardLayout";
@@ -14,7 +15,7 @@ const NavLinks = ({ isBigSidebar }) => {
             to={path}
             key={id}
             className="nav-link"
-            onClick={isBigSidebar ? null : toggleSidebar}
+            onClick={!isBigSidebar && toggleSidebar}
             end
           >
             <span className="icon">{icon}</span>

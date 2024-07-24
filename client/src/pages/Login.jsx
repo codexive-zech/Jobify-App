@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import {
   Link,
   Form,
@@ -19,7 +18,7 @@ export const action =
     const loginData = Object.fromEntries(formData);
     try {
       await customFetch.post("/auth/login", loginData);
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries(); // clear all the cached data/queries that are available
       toast.success("Login Successful");
       return redirect("/dashboard");
     } catch (error) {

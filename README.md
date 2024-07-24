@@ -612,19 +612,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
 
 React Query is a powerful library that simplifies data fetching, caching, and synchronization in React applications. It provides a declarative and intuitive way to manage remote data by abstracting away the complex logic of fetching and caching data from APIs. React Query offers features like automatic background data refetching, optimistic updates, pagination support, and more, making it easier to build performant and responsive applications that rely on fetching and manipulating data.
 
-[React Query Docs](https://tanstack.com/query/v4/docs/react/overview)
 
-- in the client
-
-```sh
-npm i @tanstack/react-query@4.29.5 @tanstack/react-query-devtools@4.29.6
-```
-
-App.jsx
-
-```js
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -642,89 +630,8 @@ const App = () => {
     </QueryClientProvider>
   );
 };
-```
-
-#### Page Error Element
-
-- create components/ErrorElement
-
-```js
-import { useRouteError } from "react-router-dom";
-
-const Error = () => {
-  const error = useRouteError();
-  console.log(error);
-  return <h4>There was an error...</h4>;
-};
-export default ErrorElement;
-```
-
-Stats.jsx
-
-```js
-export const loader = async () => {
-  const response = await customFetch.get("/jobs/stats");
-  return response.data;
-};
-```
-
-App.jsx
-
-```js
-{
-  path: 'stats',
-  element: <Stats />,
-  loader: statsLoader,
-  errorElement: <h4>There was an error...</h4>
-},
-```
-
-```js
-{
-  path: 'stats',
-  element: <Stats />,
-  loader: statsLoader,
-  errorElement: <ErrorElement />,
-},
-```
 
 #### First Query
-
-- navigate to stats
-
-Stats.jsx
-
-```js
-import { ChartsContainer, StatsContainer } from "../components";
-import customFetch from "../utils/customFetch";
-import { useLoaderData } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-
-export const loader = async () => {
-  return null;
-};
-
-const Stats = () => {
-  const response = useQuery({
-    queryKey: ["stats"],
-    queryFn: () => customFetch.get("/jobs/stats"),
-  });
-  console.log(response);
-  if (response.isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  return <h1>react query</h1>;
-  return (
-    <>
-      <StatsContainer defaultStats={defaultStats} />
-      {monthlyApplications?.length > 1 && (
-        <ChartsContainer data={monthlyApplications} />
-      )}
-    </>
-  );
-};
-export default Stats;
-```
 
 ```js
 const data = useQuery({
@@ -752,30 +659,6 @@ const statsQuery = {
   },
 };
 
-export const loader = async () => {
-  return null;
-};
-
-const Stats = () => {
-  const { isLoading, isError, data } = useQuery(statsQuery);
-
-  if (isLoading) return <h4>Loading...</h4>;
-  if (isError) return <h4>Error...</h4>;
-  // after loading/error or ?.
-  const { defaultStats, monthlyApplications } = data;
-
-  return (
-    <>
-      <StatsContainer defaultStats={defaultStats} />
-      {monthlyApplications?.length > 1 && (
-        <ChartsContainer data={monthlyApplications} />
-      )}
-    </>
-  );
-};
-export default Stats;
-```
-
 #### React Query in Stats Loader
 
 App.jsx
@@ -791,16 +674,11 @@ App.jsx
 
 Stats.jsx
 
-```js
-import { ChartsContainer, StatsContainer } from "../components";
-import customFetch from "../utils/customFetch";
-import { useQuery } from "@tanstack/react-query";
-
 const statsQuery = {
   queryKey: ["stats"],
   queryFn: async () => {
-    const response = await customFetch.get("/jobs/statss");
-    return response.data;
+    const {data} = await customFetch.get("/jobs/stats");
+    return data;
   },
 };
 
@@ -811,67 +689,12 @@ export const loader = (queryClient) => async () => {
 
 const Stats = () => {
   const { data } = useQuery(statsQuery);
-  const { defaultStats, monthlyApplications } = data;
 
-  return (
-    <>
-      <StatsContainer defaultStats={defaultStats} />
-      {monthlyApplications?.length > 1 && (
-        <ChartsContainer data={monthlyApplications} />
-      )}
-    </>
-  );
 };
 export default Stats;
 ```
 
-#### React Query for Current User
-
-DashboardLayout.jsx
-
-```js
-const userQuery = {
-  queryKey: ["user"],
-  queryFn: async () => {
-    const { data } = await customFetch("/users/current-user");
-    return data;
-  },
-};
-
-export const loader = (queryClient) => async () => {
-  try {
-    return await queryClient.ensureQueryData(userQuery);
-  } catch (error) {
-    return redirect("/");
-  }
-};
-
-const Dashboard = ({ prefersDarkMode, queryClient }) => {
-  const { user } = useQuery(userQuery)?.data;
-};
-```
-
 #### Invalidate Queries
-
-Login.jsx
-
-```js
-export const action =
-  (queryClient) =>
-  async ({ request }) => {
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-    try {
-      await axios.post("/api/v1/auth/login", data);
-      queryClient.invalidateQueries();
-      toast.success("Login successful");
-      return redirect("/dashboard");
-    } catch (error) {
-      toast.error(error.response.data.msg);
-      return error;
-    }
-  };
-```
 
 DashboardLayout.jsx
 
@@ -884,42 +707,9 @@ const logoutUser = async () => {
 };
 ```
 
-Profile.jsx
-
-```js
-export const action =
-  (queryClient) =>
-  async ({ request }) => {
-    const formData = await request.formData();
-    const file = formData.get("avatar");
-    if (file && file.size > 500000) {
-      toast.error("Image size too large");
-      return null;
-    }
-    try {
-      await customFetch.patch("/users/update-user", formData);
-      queryClient.invalidateQueries(["user"]);
-      toast.success("Profile updated successfully");
-      return redirect("/dashboard");
-    } catch (error) {
-      toast.error(error?.response?.data?.msg);
-      return null;
-    }
-  };
-```
-
 #### All Jobs Query
 
 AllJobs.jsx
-
-```js
-import { toast } from "react-toastify";
-import { JobsContainer, SearchContainer } from "../components";
-import customFetch from "../utils/customFetch";
-import { useLoaderData } from "react-router-dom";
-import { useContext, createContext } from "react";
-import { useQuery } from "@tanstack/react-query";
-const AllJobsContext = createContext();
 
 const allJobsQuery = (params) => {
   const { search, jobStatus, jobType, sort, page } = params;
@@ -955,88 +745,13 @@ export const loader =
 const AllJobs = () => {
   const { searchValues } = useLoaderData();
   const { data } = useQuery(allJobsQuery(searchValues));
-  return (
-    <AllJobsContext.Provider value={{ data, searchValues }}>
-      <SearchContainer />
-      <JobsContainer />
-    </AllJobsContext.Provider>
-  );
 };
 export default AllJobs;
-
-export const useAllJobsContext = () => useContext(AllJobsContext);
-```
-
-#### Invalidate Jobs
-
-AddJob.jsx
-
-```js
-export const action =
-  (queryClient) =>
-  async ({ request }) => {
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-    try {
-      await customFetch.post("/jobs", data);
-      queryClient.invalidateQueries(["jobs"]);
-      toast.success("Job added successfully ");
-      return redirect("all-jobs");
-    } catch (error) {
-      toast.error(error?.response?.data?.msg);
-      return error;
-    }
-  };
-```
-
-EditJob.jsx
-
-```js
-export const action =
-  (queryClient) =>
-  async ({ request, params }) => {
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-    try {
-      await customFetch.patch(`/jobs/${params.id}`, data);
-      queryClient.invalidateQueries(["jobs"]);
-      toast.success("Job edited successfully");
-      return redirect("/dashboard/all-jobs");
-    } catch (error) {
-      toast.error(error?.response?.data?.msg);
-      return error;
-    }
-  };
-```
-
-DeleteJob.jsx
-
-```js
-export const action =
-  (queryClient) =>
-  async ({ params }) => {
-    try {
-      await customFetch.delete(`/jobs/${params.id}`);
-      queryClient.invalidateQueries(["jobs"]);
-      toast.success("Job deleted successfully");
-    } catch (error) {
-      toast.error(error?.response?.data?.msg);
-    }
-    return redirect("/dashboard/all-jobs");
-  };
 ```
 
 #### Edit Job Loader
 
 ```js
-import { FormRow, FormRowSelect, SubmitBtn } from "../components";
-import Wrapper from "../assets/wrappers/DashboardFormPage";
-import { useLoaderData, useParams } from "react-router-dom";
-import { JOB_STATUS, JOB_TYPE } from "../../../utils/constants";
-import { Form, redirect } from "react-router-dom";
-import { toast } from "react-toastify";
-import customFetch from "../utils/customFetch";
-import { useQuery } from "@tanstack/react-query";
 
 const singleJobQuery = (id) => {
   return {
@@ -1084,36 +799,6 @@ const EditJob = () => {
     data: { job },
   } = useQuery(singleJobQuery(id));
 
-  return (
-    <Wrapper>
-      <Form method="post" className="form">
-        <h4 className="form-title">edit job</h4>
-        <div className="form-center">
-          <FormRow type="text" name="position" defaultValue={job.position} />
-          <FormRow type="text" name="company" defaultValue={job.company} />
-          <FormRow
-            type="text"
-            name="jobLocation"
-            labelText="job location"
-            defaultValue={job.jobLocation}
-          />
-          <FormRowSelect
-            name="jobStatus"
-            labelText="job status"
-            defaultValue={job.jobStatus}
-            list={Object.values(JOB_STATUS)}
-          />
-          <FormRowSelect
-            name="jobType"
-            labelText="job type"
-            defaultValue={job.jobType}
-            list={Object.values(JOB_TYPE)}
-          />
-          <SubmitBtn formBtn />
-        </div>
-      </Form>
-    </Wrapper>
-  );
 };
 export default EditJob;
 ```
@@ -1157,11 +842,6 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
 ```
 
 #### Security
-
-```sh
-npm install helmet express-mongo-sanitize express-rate-limit
-
-```
 
 Package: helmet
 Description: helmet is a security package for Express.js applications that helps protect them by setting various HTTP headers to enhance security, prevent common web vulnerabilities, and improve overall application security posture.

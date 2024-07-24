@@ -15,7 +15,7 @@ export const action =
     } // checking if the avatar field via image-file exist and the size is bigger than 5MB
     try {
       await customFetch.patch("/users/update-user", formData);
-      queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries(["user"]); // clear the cached [user] data/queries that are available
       toast.success("Profile Updated Successfully");
       return redirect("/dashboard");
     } catch (error) {

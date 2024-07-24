@@ -39,7 +39,7 @@ export const action =
     const updatedData = Object.fromEntries(formData);
     try {
       await customFetch.patch(`/jobs/${params.id}`, updatedData);
-      queryClient.invalidateQueries(["jobs"]);
+      queryClient.invalidateQueries(["jobs"]); // clear the cached [jobs] data/queries that are available
       toast.success("Job Edited Successfully");
       return redirect("/dashboard/all-jobs");
     } catch (error) {
